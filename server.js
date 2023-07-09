@@ -16,13 +16,15 @@ app.use(bodyParser.urlencoded(
 app.use(express.json());
 app.use(methodOverride('_method'));
 
-// app.use(cors(
-//     {
-//         origin: '*'
-//     }
-// ));
+/*
+app.use(cors(
+    {
+        origin: '*'
+    }
+));
 
-// app.options('*', cors());
+app.options('*', cors());
+*/
 
 /////////////////////////////// IMPORT ROUTERS /////////////////////////////
 const userRouter = require('./routers/users_router');
