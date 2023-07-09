@@ -1,7 +1,7 @@
 const Joi = require("joi")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
-// const userModel = require("../models/UserModel")
+const userModel = require("../models/UserModel")
 const userValidators = require("./validators/userValidator")
 
 const userControllers = {

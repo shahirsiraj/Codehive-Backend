@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken")
+
 const PostsModel = require('../models/PostModel')
 
 const controllers = {
@@ -13,7 +13,7 @@ const controllers = {
         let post = null
 
         try {
-            // use model to find by id
+           
             post = await PostsModel.findById(postID)
         } catch(err) {
             
@@ -22,7 +22,7 @@ const controllers = {
             })
         }
 
-        // if not exists -> return response 404
+  
         if (!post) {
     
             
@@ -31,7 +31,7 @@ const controllers = {
             })
         }
 
-        // return json response of the fetched data
+ 
         return res.json(post)
     },
 
