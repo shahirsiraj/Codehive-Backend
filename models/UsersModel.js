@@ -10,7 +10,7 @@ const usersSchema = new mongoose.Schema(
         Possible extras:
         - link with GitHub API to call for Repo links 
         - independent biography/Progaramming Lang Fluency/Profession (for simpler updating)
-        - add a validator variable before being able to update posted post (a logic to check if user is the person that posted the post)
+        - add a validator variable before being able to update posted post (a logic to check if user is the person that posted the post)  
         
         */
     }

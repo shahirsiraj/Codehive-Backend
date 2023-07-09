@@ -1,0 +1,5 @@
+/*
+ Possibly manually doing this when launched rather than seeding it in.
+ OR 
+ Create a post array of objects with associated ObjectID of Users to know which post belongs to which user.
+*/
