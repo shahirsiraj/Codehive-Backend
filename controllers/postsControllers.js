@@ -1,6 +1,7 @@
 
 const PostsModel = require('../models/PostModel')
 
+
 const controllers = {
 
     listPosts: async (req, res) => {
@@ -53,7 +54,7 @@ const controllers = {
         })
     },
 
-    updateItem: async (req, res) => {
+    updatePost: async (req, res) => {
         const data = req.body
 
         const postID = req.params.postID
