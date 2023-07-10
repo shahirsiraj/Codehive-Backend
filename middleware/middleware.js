@@ -24,6 +24,18 @@ const middleware = (req, res, next) => {
         })
     }
 
+    const decoded = jwt.decode(token)
+    if (!decoded) {
+        
+        return res.status(401).json({
+            msg: `failed to decode token`
+        })
+    }
+
+
+
+    res.locals.authUserID = decoded.sub
+
     next()
 }
 
