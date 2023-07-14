@@ -19,5 +19,5 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PA
     }
     )
     .catch(err => {
-        console.error('Failed to seed users into database')
+        console.error(`Failed to seed users into database ${err}`)
     })
