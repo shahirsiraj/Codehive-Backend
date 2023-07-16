@@ -10,11 +10,9 @@ const middleware = (req, res, next) => {
         })
     }
         
-   
+    // splice out the "bearer" in headers to get token value
+    const token = authHeader.substring(7) 
 
-    const token = authHeader.substring(7)
-
-    
     try {
         jwt.verify(token, process.env.APP_KEY)
     } catch(err) {
@@ -31,8 +29,6 @@ const middleware = (req, res, next) => {
             msg: `failed to decode token`
         })
     }
-
-
 
     res.locals.authUserID = decoded.sub
 

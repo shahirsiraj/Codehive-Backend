@@ -1,7 +1,7 @@
-const Joi = require("joi")
+
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
-const userModel = require("../models/UserModel")
+const userModel = require("../models/UsersModel")
 const userValidators = require("./validators/userValidator")
 
 const userControllers = {
@@ -11,7 +11,7 @@ const userControllers = {
         const data = req.body
 
 
-        const validationResult = userValidators.validate(data)
+        const validationResult = userValidators.registerSchema.validate(data)
         if (validationResult.error) {
             res.statusCode = 400
 
@@ -55,8 +55,6 @@ const userControllers = {
     login: async (req, res) => {
         
         const data = req.body
-
-      
 
         const validationResult = userValidators.loginSchema.validate(data)
         
@@ -110,7 +108,6 @@ const userControllers = {
             }
         )
 
-        
         res.json({
             msg: 'login successful',
             token: token,
