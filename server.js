@@ -31,6 +31,7 @@ app.options('*', cors());
 const userRouter = require('./routers/users_router');
 const postRouter = require('./routers/posts_router');
 const commentsRouter = require('./routers/comments_router');
+const githubRouter = require('./routers/github_router')
 
 
 ///////////////////////////   API ENDPOINT ROUTES //////////////////////////
@@ -38,6 +39,7 @@ const commentsRouter = require('./routers/comments_router');
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/comments', commentsRouter);
+app.use('api/github', githubRouter)
 
 /////////////////////////////// LISTENER //////////////////////////////////
 /*
