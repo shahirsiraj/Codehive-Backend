@@ -5,7 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
-// const cors = require('cors');
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded(
 app.use(express.json());
 app.use(methodOverride('_method'));
 
-/*
+
 app.use(cors(
     {
         origin: '*'
@@ -25,7 +25,7 @@ app.use(cors(
 ));
 
 app.options('*', cors());
-*/
+
 
 /////////////////////////////// IMPORT ROUTERS /////////////////////////////
 const userRouter = require('./routers/users_router');
