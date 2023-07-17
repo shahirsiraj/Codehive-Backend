@@ -5,7 +5,7 @@ const githubController = require('../controllers/githubController')
 
 router.get('/getAccessToken', githubController.getAccessToken)
 router.get('/getUserData', githubController.getUserData)
-router.get('/repositories/:username', githubController.getUserRepositories)
+router.get('/repositories/:username', githubController.getUserRepos)
 router.get('/profile/:username', githubController.getUserProfile)
 
 
