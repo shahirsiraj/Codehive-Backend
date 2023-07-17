@@ -1,7 +1,6 @@
 
 const PostsModel = require('../models/PostModel')
 
-
 const controllers = {
 
     listPosts: async (req, res) => {

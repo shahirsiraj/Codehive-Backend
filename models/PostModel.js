@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// const commentsModel = require('./CommentsModel');
+const commentsModel = require('./CommentsModel');
 
 const postSchema = new mongoose.Schema(
     {
@@ -18,9 +18,17 @@ const postSchema = new mongoose.Schema(
 
     },
     {
-        timestamps: true
+        timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
     }
 );
+
+postSchema.virtual('comments', {
+    ref: commentsModel,
+    localField: '_id', 
+    foreignField: 'post' // refer to CommentsModel.js 'post'
+})
 
 const Posts = mongoose.model('Posts', postSchema);
 
