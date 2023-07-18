@@ -6,13 +6,15 @@ const userValidators = require("./validators/userValidator");
 const userControllers = {
   register: async (req, res) => {
     const data = req.body;
+    console.log("registration data:", data);
 
     const validationResult = userValidators.registerSchema.validate(data);
+
     if (validationResult.error) {
       res.statusCode = 400;
-
+      // console.log(validationResult);
       return res.json({
-        msg: validationResult.error.details[0].message,
+        msg: `registration failed ${validationResult.error.details[0].message}`,
       });
     }
 
@@ -48,6 +50,7 @@ const userControllers = {
 
   login: async (req, res) => {
     const data = req.body;
+    console.log("login data:", data);
 
     const validationResult = userValidators.loginSchema.validate(data);
 
@@ -71,7 +74,7 @@ const userControllers = {
 
     if (!user) {
       return res.status(401).json({
-        msg: "login failed, please check login detailssss",
+        msg: "login failed, please check login details",
       });
     }
 
