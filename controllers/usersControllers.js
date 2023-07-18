@@ -101,8 +101,30 @@ const userControllers = {
 
     res.json({
       msg: "login successful",
+      user: user, // added user to payload
       token: token,
     });
+  },
+
+  getUserById: async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+      const user = await userModel.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Log the user data
+      console.log("User fetched:", user);
+
+      // Return the user data
+      res.json(user);
+    } catch (error) {
+      console.log("Error occurred while fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
   },
 };
 
