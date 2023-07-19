@@ -7,16 +7,21 @@ const controllers = {
       const data = req.body;
       console.log("Received payload:", data);
 
-      const result = await PostsModel.create({
+      await PostsModel.create({
         userId: data.userId,
         description: data.description,
         picturePath: data.picturePath,
       });
 
+      const posts = await PostsModel.find();
+      console.log("Retrieved Posts:", posts);
+
       res.status(201).json({
-        msg: `Post created: ${result}`,
+        msg: "Post created:",
+        posts,
       });
     } catch (error) {
+      console.log("Error creating post:", error);
       res.status(400).json({
         msg: "Error creating post",
         error: error.message,

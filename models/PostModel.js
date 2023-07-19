@@ -26,7 +26,7 @@ const postSchema = new mongoose.Schema(
         - check if original user for the posted post is logged in before allowing them to do any updating of posts
         - reference comments to this postSchema
         
-        */
+    */
   },
   {
     timestamps: true,
