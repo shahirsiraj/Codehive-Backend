@@ -11,11 +11,6 @@ const controllers = {
         userId: data.userId,
         description: data.description,
         picturePath: data.picturePath,
-        // poster: data.name,
-        // title: data.title,
-        // content: data.content,
-        // likeCount: data.likeCount,
-        // edited: data.editCheck
       });
 
       res.status(201).json({
