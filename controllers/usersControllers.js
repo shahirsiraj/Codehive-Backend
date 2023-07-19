@@ -6,13 +6,12 @@ const userValidators = require("./validators/userValidator");
 const userControllers = {
   register: async (req, res) => {
     const data = req.body;
-    console.log("registration data:", data);
+    console.log("BE Registration Data:", data);
 
     const validationResult = userValidators.registerSchema.validate(data);
 
     if (validationResult.error) {
       res.statusCode = 400;
-      // console.log(validationResult);
       return res.json({
         msg: `registration failed ${validationResult.error.details[0].message}`,
       });
@@ -38,7 +37,10 @@ const userControllers = {
         name: data.name,
         email: data.email,
         password: hash,
+        location: data.location,
+        occupation: data.occupation,
       });
+      console.log("Successfully registered", data.name);
     } catch (err) {
       return res.status(500).json({
         msg: `failed to create user: ${err}`,

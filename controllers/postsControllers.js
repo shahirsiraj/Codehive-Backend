@@ -1,145 +1,137 @@
-
-const PostsModel = require('../models/PostModel')
+const PostsModel = require("../models/PostModel");
 
 const controllers = {
+  // CREATE //
+  createPost: async (req, res) => {
+    try {
+      const data = req.body;
+      console.log("Received payload:", data);
 
-    listPosts: async (req, res) => {
-        const items = await PostsModel.find()
-        res.json(items)
-    },
+      const result = await PostsModel.create({
+        userId: data.userId,
+        description: data.description,
+        picturePath: data.picturePath,
+        // poster: data.name,
+        // title: data.title,
+        // content: data.content,
+        // likeCount: data.likeCount,
+        // edited: data.editCheck
+      });
 
-    getPosts: async (req, res) => {
-        const postID = req.params.postID
-        let post = null
+      res.status(201).json({
+        msg: `Post created: ${result}`,
+      });
+    } catch (error) {
+      res.status(400).json({
+        msg: "Error creating post",
+        error: error.message,
+      });
+    }
+  },
 
-        try {
-           
-            post = await PostsModel.findById(postID)
-        } catch(err) {
-            
-            return res.status(500).json({
-                msg: `error occured: ${err}`
-            })
-        }
+  // READ //
+  listPosts: async (req, res) => {
+    const items = await PostsModel.find();
+    res.json(items);
+  },
 
-  
-        if (!post) {
-    
-            
-            return res.status(404).json({
-                msg: `post does not exist!`
-            })
-        }
+  getPosts: async (req, res) => {
+    const postID = req.params.postID;
+    let post = null;
 
- 
-        return res.json(post)
-    },
-
-    createPost: async (req, res) => {
-      
-        const data = req.body
-
-        const result = await PostsModel.create({
-            poster: data.name,
-            title: data.title,
-            content: data.content,
-            likeCount: data.likeCount,
-            edited: data.editCheck
-        })
-
-        
-        res.status(201).json({
-            msg: `Post created: ${result}`
-        })
-    },
-
-    updatePost: async (req, res) => {
-        const data = req.body
-
-        const postID = req.params.postID
-
-
-        
-        let post = null 
-
-        try {
-            post = await PostsModel.findById(postID)
-        } catch(err) {
-    
-            return res.status(500).json({
-                msg: `error occured : ${err}`
-            })
-        }
-
-        if (!PostsModel) {
-            return res.status(404).json({
-                msg: `could not find specified post`
-            })
-        }
-
-        
-
-
-        try {
-            await PostsModel.updateOne(
-                {
-                    _id: postID
-                },
-                {
-                    poster: data.name,
-                    title: data.title,
-                    content: data.content,
-                    likeCount: data.likeCount,
-                    edited: data.editCheck
-                }
-            )
-        } catch(err) {
-            return res.status(500).json({
-                msg: `error occured: ${err}`
-            })
-        }
-
-        res.json({
-            msg: `updated!`
-        })
-    },
-
-    deletePost: async (req, res) => {
-
-        const postID = req.params.postID
-
-
-        
-        let post = null 
-
-        try {
-            post = await PostsModel.findById(postID)
-        } catch(err) {
-    
-            return res.status(500).json({
-                msg: `error occured : ${err}`
-            })
-        }
-
-        if (!PostsModel) {
-            return res.status(404).json({
-                msg: `could not find specified post`
-            })
-        }
-
-        try {
-            const result = await PostsModel.deleteOne({_id : postID})
-        } catch (err) {
-            return res.status(500).json({
-                msg: `error occured: ${err}`
-            })
-        }
-
-        res.json(result)
-
-
+    try {
+      post = await PostsModel.findById(postID);
+    } catch (err) {
+      return res.status(500).json({
+        msg: `error occured: ${err}`,
+      });
     }
 
-}
+    if (!post) {
+      return res.status(404).json({
+        msg: `post does not exist!`,
+      });
+    }
 
-module.exports = controllers
+    return res.json(post);
+  },
+
+  // UPDATE //
+  updatePost: async (req, res) => {
+    const data = req.body;
+
+    const postID = req.params.postID;
+
+    let post = null;
+
+    try {
+      post = await PostsModel.findById(postID);
+    } catch (err) {
+      return res.status(500).json({
+        msg: `error occured : ${err}`,
+      });
+    }
+
+    if (!PostsModel) {
+      return res.status(404).json({
+        msg: `could not find specified post`,
+      });
+    }
+
+    try {
+      await PostsModel.updateOne(
+        {
+          _id: postID,
+        },
+        {
+          poster: data.name,
+          title: data.title,
+          content: data.content,
+          likeCount: data.likeCount,
+          edited: data.editCheck,
+        }
+      );
+    } catch (err) {
+      return res.status(500).json({
+        msg: `error occured: ${err}`,
+      });
+    }
+
+    res.json({
+      msg: `updated!`,
+    });
+  },
+
+  // DELETE //
+  deletePost: async (req, res) => {
+    const postID = req.params.postID;
+
+    let post = null;
+
+    try {
+      post = await PostsModel.findById(postID);
+    } catch (err) {
+      return res.status(500).json({
+        msg: `error occured : ${err}`,
+      });
+    }
+
+    if (!PostsModel) {
+      return res.status(404).json({
+        msg: `could not find specified post`,
+      });
+    }
+
+    try {
+      const result = await PostsModel.deleteOne({ _id: postID });
+    } catch (err) {
+      return res.status(500).json({
+        msg: `error occured: ${err}`,
+      });
+    }
+
+    res.json(result);
+  },
+};
+
+module.exports = controllers;
