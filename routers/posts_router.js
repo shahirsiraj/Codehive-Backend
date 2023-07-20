@@ -14,6 +14,10 @@ router.get("/:postID", postsController.getPosts); // will show only the user's p
 router.patch("/:postID", authMiddleware, postsController.updatePost);
 
 // DELETE //
-router.delete("/:postID", authMiddleware, postsController.deletePost);
+router.delete(
+  "/:postID",
+  //  authMiddleware,
+  postsController.deletePost
+);
 
 module.exports = router;

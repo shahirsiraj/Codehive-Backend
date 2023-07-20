@@ -105,6 +105,7 @@ const controllers = {
   // DELETE //
   deletePost: async (req, res) => {
     const postID = req.params.postID;
+    console.log("postID:", postID);
 
     let post = null;
 
@@ -124,13 +125,21 @@ const controllers = {
 
     try {
       const result = await PostsModel.deleteOne({ _id: postID });
-    } catch (err) {
-      return res.status(500).json({
-        msg: `error occured: ${err}`,
-      });
-    }
 
-    res.json(result);
+      if (result.deletedCount === 1) {
+        // Post deleted successfully
+        console.log("Post deleted successfully");
+        res.json({ msg: "Post deleted successfully" });
+      } else {
+        // Post not found or deletion operation failed
+        console.log("Could not find the specified post");
+        res.status(404).json({ msg: "Could not find the specified post" });
+      }
+    } catch (err) {
+      // Error occurred during the deletion operation
+      console.error("Error occurred:", err);
+      res.status(500).json({ msg: `Error occurred: ${err}` });
+    }
   },
 };
 

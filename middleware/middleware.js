@@ -1,38 +1,31 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 
-const middleware = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-    const authHeader = req.headers.authorization
-    if (!authHeader) {
-        
-        return res.status(401).json({
-                msg: `authorization not found!`
-        })
-    }
-        
-    // splice out the "bearer" in headers to get token value
-    const token = authHeader.substring(7) 
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Authorization header not found.',
+    });
+  }
 
-    try {
-        jwt.verify(token, process.env.APP_KEY)
-    } catch(err) {
+  // Extract the token from the Authorization header
+  const token = authHeader.split(' ')[1];
 
-        return res.status(401).json({
-            msg: `could not verify token: ${err}`
-        })
-    }
+  try {
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.APP_KEY);
 
-    const decoded = jwt.decode(token)
-    if (!decoded) {
-        
-        return res.status(401).json({
-            msg: `failed to decode token`
-        })
-    }
+    // Attach the decoded payload to the request object for later use
+    req.user = decoded;
 
-    res.locals.authUserID = decoded.sub
+    // Proceed to the next middleware or route handler
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      error: 'Invalid or expired token.',
+    });
+  }
+};
 
-    next()
-}
-
-module.exports = middleware
+module.exports = authMiddleware;
