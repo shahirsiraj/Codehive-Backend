@@ -27,6 +27,7 @@ const userRouter = require("./routers/users_router");
 const postRouter = require("./routers/posts_router");
 const commentsRouter = require("./routers/comments_router");
 const githubRouter = require("./routers/github_router");
+const authMiddleware = require("./middleware/middleware");
 
 ///////////////////////////   API ENDPOINT ROUTES //////////////////////////
 
@@ -35,6 +36,9 @@ app.use("/api/users/:userId", userRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/comments", commentsRouter);
 app.use("api/github", githubRouter);
+
+//////////////////// API ENDPOINT ROUTES WITH MEDIA ////////////////////////
+app.post("/posts", authMiddleware, upload.single("picture"), createPost);
 
 /////////////////////////////// LISTENER //////////////////////////////////
 /*

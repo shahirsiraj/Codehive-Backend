@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const userModel = require("../models/UsersModel");
 const userValidators = require("./validators/userValidator");
 
+
 const userControllers = {
   register: async (req, res) => {
     const data = req.body;
@@ -122,12 +123,75 @@ const userControllers = {
       console.log("User fetched:", user);
 
       // Return the user data
-      res.json(user);
+      res.status(200).json(user);
     } catch (error) {
       console.log("Error occurred while fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
     }
   },
+
+  getFriends: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const user = await userModel.find(userId)
+  
+      const friends = await Promise.all(
+        user.friends.map(
+          (id) => userModel.findById(id)
+        )
+      );
+  
+      const formattedFriends = friends.map(
+        (
+          { _id, name, occupation, location }
+        ) => {
+          return { _id, name, occupation, location }
+        }
+      );
+  
+      res.status(200).json(formattedFriends);
+    } catch (err) {
+      res.status(404).json({ message: err.message });
+    }
+
+  },
+
+  getSpecificFriend: async (req, res) => {
+
+  },
+
+  addRemoveFriend: async (req, res) => {
+    try {
+      const { userId, friendId } = req.params;
+      const user = await userModel.findById(userId);
+      const friend = await userModel.findById(friendId);
+  
+      if (userModel.friends.includes(friendId)) {
+        user.friends = user.friends.filter((id) => id !== friendId); // removes friendId from user
+        friend.friends = friend.friends.filter((id) => id !== id); // removes user from that friendId
+      } else { // if not added as friend
+        user.friends.push(friendId);
+        friend.friends.push(id);
+      }
+      
+      // update the list
+      await user.save();
+      await friend.save();
+  
+      const friends = await Promise.all(
+        user.friends.map((id) => userModel.findById(id))
+      );
+      const formattedFriends = friends.map(
+        ({ _id, name, occupation, location }) => {
+          return { _id, name, occupation, location };
+        }
+      );
+  
+      res.status(200).json(formattedFriends);
+    } catch (err) {
+      res.status(404).json({ message: err.message });
+    }
+  }
 };
 
 module.exports = userControllers;

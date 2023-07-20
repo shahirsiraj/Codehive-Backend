@@ -7,8 +7,8 @@ const authMiddleware = require("../middleware/middleware");
 router.post("/", authMiddleware, postsController.createPost);
 
 // READ //
-router.get("/", postsController.listPosts);
-router.get("/:postID", postsController.getPosts);
+router.get("/", postsController.listPosts); // view all the posts no matter whose on the HomePage
+router.get("/:postID", postsController.getPosts); // will show only the user's posts
 
 // UPDATE //
 router.patch("/:postID", authMiddleware, postsController.updatePost);
