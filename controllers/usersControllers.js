@@ -6,13 +6,14 @@ const userValidators = require("./validators/userValidator");
 const userControllers = {
   register: async (req, res) => {
     const data = req.body;
+    console.log("BE Registration Data:", data);
 
     const validationResult = userValidators.registerSchema.validate(data);
+
     if (validationResult.error) {
       res.statusCode = 400;
-
       return res.json({
-        msg: validationResult.error.details[0].message,
+        msg: `registration failed ${validationResult.error.details[0].message}`,
       });
     }
 
@@ -36,7 +37,10 @@ const userControllers = {
         name: data.name,
         email: data.email,
         password: hash,
+        location: data.location,
+        occupation: data.occupation,
       });
+      console.log("Successfully registered", data.name);
     } catch (err) {
       return res.status(500).json({
         msg: `failed to create user: ${err}`,
@@ -48,6 +52,7 @@ const userControllers = {
 
   login: async (req, res) => {
     const data = req.body;
+    console.log("login data:", data);
 
     const validationResult = userValidators.loginSchema.validate(data);
 
@@ -57,53 +62,50 @@ const userControllers = {
       });
     }
 
-    let user = null;
-
     try {
-      //   user = await userModel.findOne({ email: data.email });
-      user = data.email;
-      console.log(user, data.password, user.password);
-    } catch (err) {
-      return res.status(500).json({
-        msg: `error while finding user: ${err}`,
-      });
-    }
+      const user = await userModel.findOne({ email: data.email });
+      console.log("User:", user);
 
-    if (!user) {
-      return res.status(401).json({
-        msg: "login failed, please check login detailssss",
-      });
-    }
-
-    user = await userModel.findOne({ email: data.email });
-    console.log("Data Password:", data.password);
-    console.log("User Password:", user.password);
-    const validLogin = await bcrypt.compare(data.password, user.password);
-
-    if (!validLogin) {
-      return res.status(401).json({
-        msg: "login failed, please check login details",
-      });
-    }
-
-    const token = jwt.sign(
-      {
-        email: user.email,
-      },
-      process.env.APP_KEY,
-      {
-        expiresIn: "10 days",
-        audience: "front-end",
-        issuer: "server",
-        subject: user._id.toString(),
+      if (!user) {
+        return res.status(401).json({
+          msg: "Login failed, please check login details",
+        });
       }
-    );
 
-    res.json({
-      msg: "login successful",
-      user: user, // added user to payload
-      token: token,
-    });
+      console.log("Data Password:", data.password);
+      console.log("User Password:", user.password);
+      const validLogin = await bcrypt.compare(data.password, user.password);
+
+      if (!validLogin) {
+        return res.status(401).json({
+          msg: "Login failed, please check login details",
+        });
+      }
+
+      const token = jwt.sign(
+        {
+          email: user.email,
+        },
+        process.env.APP_KEY,
+        {
+          expiresIn: "10 days",
+          audience: "front-end",
+          issuer: "server",
+          subject: user._id.toString(),
+        }
+      );
+
+      res.json({
+        msg: "Login successful",
+        user: user,
+        token: token,
+      });
+    } catch (error) {
+      console.log("Error:", error);
+      res.status(500).json({
+        msg: "Internal server error",
+      });
+    }
   },
 
   getUserById: async (req, res) => {
