@@ -3,7 +3,7 @@ const commentsModel = require("./CommentsModel");
 
 const postSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true },
+    userId: { type: mongoose.Schema.ObjectId, required: true },
     description: {
       type: String,
       required: true,
