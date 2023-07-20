@@ -4,6 +4,7 @@ const usersSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  friends: { type: Array, default: [] },
   location: { type: String, required: false },
   occupation: { type: String, required: false },
   // Add more properties as needed
