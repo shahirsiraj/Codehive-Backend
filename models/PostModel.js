@@ -10,6 +10,8 @@ const postSchema = new mongoose.Schema(
       maxLength: [100, "Must not exceed 100 characters"],
     },
     picturePath: { type: String },
+
+    
     // comments: {
     //   type: Array,
     //   default: [],

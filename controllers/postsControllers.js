@@ -116,7 +116,7 @@ const controllers = {
       });
     }
 
-    if (!PostsModel) {
+    if (!post) {
       return res.status(404).json({
         msg: `could not find specified post`,
       });
