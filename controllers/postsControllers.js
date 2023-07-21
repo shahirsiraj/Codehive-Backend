@@ -1,4 +1,6 @@
 const PostsModel = require("../models/PostModel");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 const controllers = {
   // CREATE //
@@ -56,6 +58,16 @@ const controllers = {
     return res.json(post);
   },
 
+  getUserPosts: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const post = await Post.find({ userId });
+      res.status(200).json(post);
+    } catch (err) {
+      res.status(404).json({ message: err.message });
+    }
+  },
+
   // UPDATE //
   updatePost: async (req, res) => {
     const data = req.body;
@@ -100,6 +112,44 @@ const controllers = {
     res.json({
       msg: `updated!`,
     });
+  },
+
+  likeToggle: async (req, res) => {
+    try {
+      const postId = req.body.postId;
+      const userId = req.body.userId;
+      console.log("postID:", postId, "userID:", userId);
+
+      // Find the post
+      const post = await PostsModel.findById(postId);
+      console.log("Get post:", post);
+
+      let updatedPost;
+      // Check if the user has already liked the post
+      if (post.like.includes(userId)) {
+        // If they have, unlike the post
+        updatedPost = await PostsModel.findByIdAndUpdate(
+          postId,
+          { $pull: { like: userId }, $inc: { likeCount: -1 } },
+          { new: true } // 'new: true' returns the updated document
+        );
+        console.log(updatedPost);
+      } else {
+        // If they haven't, like the post
+        updatedPost = await PostsModel.findByIdAndUpdate(
+          postId,
+          { $push: { like: userId }, $inc: { likeCount: 1 } },
+          { new: true } // 'new: true' returns the updated document
+        );
+      }
+
+      res.json(updatedPost);
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({ error: "An error occurred while toggling like/unlike state." });
+    }
   },
 
   // DELETE //
