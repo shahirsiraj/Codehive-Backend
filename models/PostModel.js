@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
 const commentsModel = require("./CommentsModel");
+// const userModel = require("./UserModel");
 
 const postSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.ObjectId, required: true },
+    name: { type: String },
     description: {
       type: String,
       required: true,

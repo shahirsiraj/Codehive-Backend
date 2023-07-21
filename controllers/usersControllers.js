@@ -130,18 +130,6 @@ const userControllers = {
       res.status(500).json({ message: "Failed to fetch user" });
     }
   },
-  // listUsers: async (req, res) => {
-  //   try {
-  //     const users = await userModel.find();
-  //     res.status(200).json(users);
-  //   } catch (err) {
-  //     console.error("Error occurred while retrieving users:", err);
-  //     return res.status(500).json({
-  //       error: "Internal Server Error",
-  //       message: err.message,
-  //     });
-  //   }
-  // },
 
   listUsers: async (req, res) => {
     try {
@@ -178,24 +166,44 @@ const userControllers = {
     }
   },
 
-  getSpecificFriend: async (req, res) => {},
-
+  // getSpecificFriend: async (req, res) => {},
   addRemoveFriend: async (req, res) => {
     try {
       const { userId, friendId } = req.params;
+      console.log(`UserId: ${userId}, FriendId: ${friendId}`);
+
       const user = await userModel.findById(userId);
       const friend = await userModel.findById(friendId);
 
-      if (userModel.friends.includes(friendId)) {
-        user.friends = user.friends.filter((id) => id !== friendId); // removes friendId from user
-        friend.friends = friend.friends.filter((id) => id !== id); // removes user from that friendId
-      } else {
-        // if not added as friend
-        user.friends.push(friendId);
-        friend.friends.push(id);
+      if (!user) {
+        console.log(`No user found with id: ${userId}`);
+        return res
+          .status(404)
+          .json({ message: `No user found with id: ${userId}` });
       }
 
-      // update the list
+      if (!friend) {
+        console.log(`No friend found with id: ${friendId}`);
+        return res
+          .status(404)
+          .json({ message: `No friend found with id: ${friendId}` });
+      }
+
+      const friendIdAsObjectId = new mongoose.Types.ObjectId(friendId);
+      const userIdAsObjectId = new mongoose.Types.ObjectId(userId);
+
+      if (user.friends.includes(friendId)) {
+        console.log(`Friend already in user's friend list. Removing friend.`);
+        user.friends = user.friends.filter((id) => id.toString() !== friendId);
+        friend.friends = friend.friends.filter(
+          (id) => id.toString() !== userId
+        );
+      } else {
+        console.log(`Friend not in user's friend list. Adding friend.`);
+        user.friends.push(friendIdAsObjectId);
+        friend.friends.push(userIdAsObjectId);
+      }
+
       await user.save();
       await friend.save();
 
@@ -208,9 +216,15 @@ const userControllers = {
         }
       );
 
+      console.log(
+        `Success! Updated friends list sent: ${JSON.stringify(
+          formattedFriends
+        )}`
+      );
       res.status(200).json(formattedFriends);
     } catch (err) {
-      res.status(404).json({ message: err.message });
+      console.log(`Error: ${err.message}`);
+      res.status(500).json({ message: err.message });
     }
   },
 };
