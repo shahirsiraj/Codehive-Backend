@@ -2,7 +2,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/UsersModel");
 const userValidators = require("./validators/userValidator");
-
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Types;
 
 const userControllers = {
   register: async (req, res) => {
@@ -129,55 +130,75 @@ const userControllers = {
       res.status(500).json({ message: "Failed to fetch user" });
     }
   },
+  // listUsers: async (req, res) => {
+  //   try {
+  //     const users = await userModel.find();
+  //     res.status(200).json(users);
+  //   } catch (err) {
+  //     console.error("Error occurred while retrieving users:", err);
+  //     return res.status(500).json({
+  //       error: "Internal Server Error",
+  //       message: err.message,
+  //     });
+  //   }
+  // },
+
+  listUsers: async (req, res) => {
+    try {
+      const users = await userModel.find();
+      // console.log("listUsers:", users);
+      res.status(200).json(users);
+    } catch (err) {
+      console.log("Error occurred while retrieving users:", err);
+      return res.status(500).json({
+        error: "Internal Server Error",
+        message: err.message,
+      });
+    }
+  },
 
   getFriends: async (req, res) => {
     try {
       const { userId } = req.params;
-      const user = await userModel.find(userId)
-  
+      const user = await userModel.findById(userId);
+
       const friends = await Promise.all(
-        user.friends.map(
-          (id) => userModel.findById(id)
-        )
+        user.friends.map((id) => userModel.findById(id))
       );
-  
+
       const formattedFriends = friends.map(
-        (
-          { _id, name, occupation, location }
-        ) => {
-          return { _id, name, occupation, location }
+        ({ _id, name, occupation, location }) => {
+          return { _id, name, occupation, location };
         }
       );
-  
+
       res.status(200).json(formattedFriends);
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
-
   },
 
-  getSpecificFriend: async (req, res) => {
-
-  },
+  getSpecificFriend: async (req, res) => {},
 
   addRemoveFriend: async (req, res) => {
     try {
       const { userId, friendId } = req.params;
       const user = await userModel.findById(userId);
       const friend = await userModel.findById(friendId);
-  
+
       if (userModel.friends.includes(friendId)) {
         user.friends = user.friends.filter((id) => id !== friendId); // removes friendId from user
         friend.friends = friend.friends.filter((id) => id !== id); // removes user from that friendId
-      } else { // if not added as friend
+      } else {
+        // if not added as friend
         user.friends.push(friendId);
         friend.friends.push(id);
       }
-      
+
       // update the list
       await user.save();
       await friend.save();
-  
+
       const friends = await Promise.all(
         user.friends.map((id) => userModel.findById(id))
       );
@@ -186,12 +207,12 @@ const userControllers = {
           return { _id, name, occupation, location };
         }
       );
-  
+
       res.status(200).json(formattedFriends);
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
-  }
+  },
 };
 
 module.exports = userControllers;

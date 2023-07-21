@@ -10,8 +10,9 @@ const postSchema = new mongoose.Schema(
       maxLength: [100, "Must not exceed 100 characters"],
     },
     picturePath: { type: String },
+    likeCount: { type: Number, default: 0 },
+    like: [{ type: mongoose.Schema.ObjectId, ref: "User" }], // Array of User's ObjectId
 
-    
     // comments: {
     //   type: Array,
     //   default: [],
@@ -20,7 +21,6 @@ const postSchema = new mongoose.Schema(
     // poster: { type: mongoose.Schema.ObjectId, ref: "User", required: true }, // indicates who this post is from
     // title: { type: String, required: true }, // title of the post
     // content: { type: String, required: true, maxLength: [100, "Must not exceed 100 characters"] },
-    // likeCount: { type: Number, default: 0 },
     // edited: { type: Boolean, default: false } // to check if it was edited/updated
 
     /*

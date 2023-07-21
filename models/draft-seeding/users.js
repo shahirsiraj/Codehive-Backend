@@ -5,7 +5,7 @@ const users = [
     password: "jenn101",
     location: "New York",
     occupation: "Software Engineer",
-    friends: [],
+    friends: ["64b6b94cb0dc7ae08f9a6deb"],
 },
 {
     name: "Livinston",
