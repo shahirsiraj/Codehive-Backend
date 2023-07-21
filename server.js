@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
