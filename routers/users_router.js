@@ -20,5 +20,11 @@ router.patch(
 //   authMiddleware,
 //   userController.getSpecificFriend
 // ); // view a friend through name
+// Delete User //
+router.delete(
+  "/:userId/deleteUser",
+  authMiddleware,
+  userController.deleteUser
+);
 
 module.exports = router;
