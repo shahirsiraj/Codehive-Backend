@@ -227,6 +227,18 @@ const userControllers = {
       res.status(500).json({ message: err.message });
     }
   },
+
+  deleteUser: async (req, res) => {
+    const { userId } = req.params;
+    const user = await userModel.findById(userId);
+
+    if (user) {
+      await user.remove();
+      res.status(200).json({ message: "User deleted successfully" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  },
 };
 
 module.exports = userControllers;

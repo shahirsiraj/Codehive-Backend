@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -41,13 +41,6 @@ app.use("api/github", githubRouter);
 // app.post("/posts", authMiddleware, upload.single("picture"), createPost);
 
 /////////////////////////////// LISTENER //////////////////////////////////
-/*
-app.listen(port, () => {
-    console.log('GitHive App running on port: ', port)
-}
-)
-*/
-
 mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_HOST}/${process.env.MONGO_DB}?retryWrites=true&w=majority`
@@ -55,8 +48,8 @@ mongoose
   .then(() => {
     console.log(`MongoDB, ${process.env.MONGO_USER} connected`);
 
-    app.listen(port, () => {
-      console.log("GitHive App running on port: ", port);
+    app.listen(PORT, () => {
+      console.log("GitHive App running on port: ", PORT);
     });
   })
   .catch((err) => {
